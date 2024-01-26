@@ -47,3 +47,28 @@ test "selectionSort" {
         try testing.expectApproxEqRel(e, a, 0.001);
     }
 }
+
+fn bubbleSort(comptime T: type, arr: []T) void {
+    var i: usize = 1;
+    while (i < arr.len) : (i += 1) {
+        var j: usize = 0;
+        while (j < arr.len - i) : (j += 1) {
+            const left = &arr[j];
+            const right = &arr[j+1];
+            if (left.* > right.*) std.mem.swap(T, left, right);
+        }
+    }
+}
+
+test "bubbleSort" {
+    var case1 = [_]u32{7, 6, 5, 4, 3, 2, 1, 0};
+    var case2 = [_]f32{6.3, -1.0, -5.43, 10.4};
+
+    bubbleSort(@TypeOf(case1[0]), &case1);
+    bubbleSort(@TypeOf(case2[0]), &case2);
+
+    try testing.expectEqual([_]u32{0, 1, 2, 3, 4, 5, 6, 7}, case1);
+    for ([_]f32{-5.43, -1.0, 6.3, 10.4}, case2) |e, a| {
+        try testing.expectApproxEqRel(e, a, 0.001);
+    }
+}
