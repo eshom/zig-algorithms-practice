@@ -72,3 +72,58 @@ test "bubbleSort" {
         try testing.expectApproxEqRel(e, a, 0.001);
     }
 }
+
+fn partition_first(comptime T: type, arr: []T) usize {
+    const left: usize = 0;
+    const pivot = arr[left];
+    var right: usize = arr.len-1;
+    var final_idx: usize = right;
+
+    while (right > left) : (right -= 1) {
+        if (pivot < arr[right]) {
+            std.mem.swap(T, &arr[right], &arr[final_idx]);
+            final_idx -= 1;
+        }
+    }
+    std.mem.swap(T, &arr[left], &arr[final_idx]);
+    return final_idx;
+}
+
+fn partition_rand(comptime T: type, arr: []T, rng: std.rand.Random) usize {
+    _ = rng;
+    _ = arr;
+    return 0;
+}
+
+fn quickSort(comptime T: type, arr: []T, part_fn: fn(comptime type, []T) usize) void {
+    if (arr.len < 2) return; // base case: nothing to sort
+
+    const pivot_idx = part_fn(T, arr);
+    const left = arr[0..pivot_idx];
+    const right = arr[(pivot_idx+1)..];
+
+    quickSort(T, left, part_fn);
+    quickSort(T, right, part_fn);
+}
+
+test "quickSort" {
+    const start_time: u64 = @intCast(std.time.timestamp());
+    var rng = std.rand.DefaultPrng.init(start_time);
+    std.debug.print("Random number: {d}\n", .{rng.random().intRangeLessThan(usize, 0, 10)});
+
+    var case1 = [_]i32{5, 10, 2, 3, -5, 20};
+    const expected1 = [_]i32{-5, 2, 3, 5, 10, 20};
+
+    var case2 = [_]u32{0, 0, 10, 4, 4, 7, 7, 1, 5};
+    const expected2 = [_]u32{0, 0, 1, 4, 4, 5, 7, 7, 10};
+
+    std.debug.print("before: {any}\n", .{case1});
+    quickSort(i32, &case1, partition_first);
+    std.debug.print("after: {any}\n", .{case1});
+    try testing.expectEqualSlices(i32, &expected1, &case1);
+
+    std.debug.print("before: {any}\n", .{case2});
+    quickSort(u32, &case2, partition_first);
+    std.debug.print("after: {any}\n", .{case2});
+    try testing.expectEqualSlices(u32, &expected2, &case2);
+}
