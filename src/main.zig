@@ -1,16 +1,10 @@
 const std = @import("std");
 
-fn myNull() ?i32 {
-    return null;
-}
-
-fn myError() error{NullValue}!i32 {
-    return error.NullValue;
-}
-
 pub fn main() !void {
-    const y = myError();
-    const x = myNull() orelse error.NullValue;
-    std.debug.print("My value: {d}\n", .{try x});
-    _ = try y;
+    const arr = [_]u64{1,2,3,4,5,6};
+    const slice = arr[0..];
+    const pointer: [*]const u64 = &arr;
+    std.debug.print("{any}\n", .{@typeInfo(@TypeOf(slice))});
+    std.debug.print("{any}\n", .{@typeInfo(@typeInfo(@TypeOf(slice)).Pointer.child)});
+    std.debug.print("\n{any}\n", .{@typeInfo(@TypeOf(pointer))});
 }
