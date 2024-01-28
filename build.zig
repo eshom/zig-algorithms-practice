@@ -74,9 +74,16 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    //Recursion-focused algorithms
+    // Stack implementation
     const lib_unit_tests_stack = b.addTest(.{
         .root_source_file = .{ .path = "src/stack.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // Hashmap implementation
+    const lib_unit_tests_hashmap = b.addTest(.{
+        .root_source_file = .{ .path = "src/hashmap.zig" },
         .target = target,
         .optimize = optimize,
     });
@@ -85,6 +92,7 @@ pub fn build(b: *std.Build) void {
     const run_lib_unit_tests_sort = b.addRunArtifact(lib_unit_tests_sort);
     const run_lib_unit_tests_recur = b.addRunArtifact(lib_unit_tests_recur);
     const run_lib_unit_tests_stack = b.addRunArtifact(lib_unit_tests_stack);
+    const run_lib_unit_tests_hashmap = b.addRunArtifact(lib_unit_tests_hashmap);
 
     const exe_unit_tests_search = b.addTest(.{
         .root_source_file = .{ .path = "src/search.zig" },
@@ -110,11 +118,18 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const exe_unit_tests_hashmap = b.addTest(.{
+        .root_source_file = .{ .path = "src/hashmap.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
 
     const run_exe_unit_tests_search = b.addRunArtifact(exe_unit_tests_search);
     const run_exe_unit_tests_sort = b.addRunArtifact(exe_unit_tests_sort);
     const run_exe_unit_tests_recur = b.addRunArtifact(exe_unit_tests_recur);
     const run_exe_unit_tests_stack = b.addRunArtifact(exe_unit_tests_stack);
+    const run_exe_unit_tests_hashmap = b.addRunArtifact(exe_unit_tests_hashmap);
 
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
@@ -134,4 +149,8 @@ pub fn build(b: *std.Build) void {
     const test_step_stack = b.step("test-stack", "Run unit tests stack algorithms");
     test_step_stack.dependOn(&run_lib_unit_tests_stack.step);
     test_step_stack.dependOn(&run_exe_unit_tests_stack.step);
+
+    const test_step_hashmap = b.step("test-hashmap", "Run unit tests hashmap algorithms");
+    test_step_hashmap.dependOn(&run_lib_unit_tests_hashmap.step);
+    test_step_hashmap.dependOn(&run_exe_unit_tests_hashmap.step);
 }
