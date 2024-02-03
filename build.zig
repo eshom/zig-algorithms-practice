@@ -17,7 +17,7 @@ pub fn build(b: *std.Build) void {
 
     const exe = b.addExecutable(.{
         .name = "algorithms_practice",
-        .root_source_file = .{ .path = "src/search.zig" },
+        .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = optimize,
     });
@@ -88,11 +88,27 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    // Queue implementation
+    const lib_unit_tests_queue = b.addTest(.{
+        .root_source_file = .{ .path = "src/queue.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // graph network based algorithms
+    const lib_unit_tests_graph = b.addTest(.{
+        .root_source_file = .{ .path = "src/graph.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
     const run_lib_unit_tests_search = b.addRunArtifact(lib_unit_tests_search);
     const run_lib_unit_tests_sort = b.addRunArtifact(lib_unit_tests_sort);
     const run_lib_unit_tests_recur = b.addRunArtifact(lib_unit_tests_recur);
     const run_lib_unit_tests_stack = b.addRunArtifact(lib_unit_tests_stack);
     const run_lib_unit_tests_hashmap = b.addRunArtifact(lib_unit_tests_hashmap);
+    const run_lib_unit_tests_queue = b.addRunArtifact(lib_unit_tests_queue);
+    const run_lib_unit_tests_graph = b.addRunArtifact(lib_unit_tests_graph);
 
     const exe_unit_tests_search = b.addTest(.{
         .root_source_file = .{ .path = "src/search.zig" },
@@ -124,12 +140,25 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const exe_unit_tests_queue = b.addTest(.{
+        .root_source_file = .{ .path = "src/queue.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const exe_unit_tests_graph = b.addTest(.{
+        .root_source_file = .{ .path = "src/graph.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
 
     const run_exe_unit_tests_search = b.addRunArtifact(exe_unit_tests_search);
     const run_exe_unit_tests_sort = b.addRunArtifact(exe_unit_tests_sort);
     const run_exe_unit_tests_recur = b.addRunArtifact(exe_unit_tests_recur);
     const run_exe_unit_tests_stack = b.addRunArtifact(exe_unit_tests_stack);
     const run_exe_unit_tests_hashmap = b.addRunArtifact(exe_unit_tests_hashmap);
+    const run_exe_unit_tests_queue = b.addRunArtifact(exe_unit_tests_queue);
+    const run_exe_unit_tests_graph = b.addRunArtifact(exe_unit_tests_graph);
 
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
@@ -153,4 +182,12 @@ pub fn build(b: *std.Build) void {
     const test_step_hashmap = b.step("test-hashmap", "Run unit tests hashmap algorithms");
     test_step_hashmap.dependOn(&run_lib_unit_tests_hashmap.step);
     test_step_hashmap.dependOn(&run_exe_unit_tests_hashmap.step);
+
+    const test_step_queue = b.step("test-queue", "Run unit tests queue algorithms");
+    test_step_queue.dependOn(&run_lib_unit_tests_queue.step);
+    test_step_queue.dependOn(&run_exe_unit_tests_queue.step);
+
+    const test_step_graph = b.step("test-graph", "Run unit tests graph algorithms");
+    test_step_graph.dependOn(&run_lib_unit_tests_graph.step);
+    test_step_graph.dependOn(&run_exe_unit_tests_graph.step);
 }

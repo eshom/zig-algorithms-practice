@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 type Queue struct {
-	arr []int
-	front int
-	rear int
-	size int
+	arr      []int
+	front    int
+	rear     int
+	size     int
 	capacity int
 }
 
@@ -34,20 +34,20 @@ func (q *Queue) isFull() bool {
 }
 
 func (q *Queue) enqueue(item int) error {
-	if (q.isFull()) {
+	if q.isFull() {
 		return errors.New("queue full")
 	}
-	q.rear = (q.rear + 1 ) % q.capacity
+	q.rear = (q.rear + 1) % q.capacity
 	q.arr[q.rear] = item
 	q.size++
 	return nil
 }
 
-func (q *Queue) dequeue() (int, error){
-	if (q.isEmpty()) {
+func (q *Queue) dequeue() (int, error) {
+	if q.isEmpty() {
 		return 0, errors.New("Empty queue")
 	}
-	q.front = (q.front + 1 ) % q.capacity
+	q.front = (q.front + 1) % q.capacity
 	q.size--
 	return q.arr[q.front], nil
 }
@@ -130,9 +130,8 @@ func main() {
 	fmt.Printf("%#v\n", x)
 	fmt.Printf("%#v\n", y)
 
-
 	fmt.Println("\nQueue")
-	items := []int{1,2,3,4,5,6,7,8,9,10,11,12,13,14}
+	items := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
 	q := NewQueue(5)
 	fmt.Printf("q: %v\n", q.arr)
 
