@@ -54,3 +54,23 @@ func printDirFiles(startDir string) []error {
 
 	return errors
 }
+
+func printDirFilesRecur(startDir string, errorsCollect []error) {
+	files, err := os.ReadDir(startDir)
+	if err != nil {
+		errorsCollect = append(errorsCollect, err)
+	}
+
+	if len(files) == 0 {
+		return
+	}
+
+	fmt.Printf("%s\n", startDir)
+	for _, file := range files {
+		if file.IsDir() {
+			printDirFilesRecur(filepath.Join(startDir, file.Name()), errorsCollect)
+		} else {
+			fmt.Printf("\t%s\n", file)
+		}
+	}
+}
